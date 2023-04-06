@@ -1,6 +1,42 @@
-CREATE DATABASE IF NOT EXISTS case;
+CREATE DATABASE IF NOT EXISTS mertcan_ekren_case;
 
-USE case;
+USE mertcan_ekren_case;
+
+DROP TABLE IF EXISTS campaigns;
+
+CREATE TABLE `campaigns` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL DEFAULT '0',
+  `discount_type` varchar(200) NOT NULL DEFAULT '0',
+  `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+
+INSERT INTO campaigns SET `id`='1', `name`='test', `discount_type`='percentage', `discount_amount`='10.00';
+INSERT INTO campaigns SET `id`='2', `name`='test', `discount_type`='percentage', `discount_amount`='10.00';
+INSERT INTO campaigns SET `id`='3', `name`='test', `discount_type`='percentage', `discount_amount`='10.00';
+INSERT INTO campaigns SET `id`='4', `name`='test', `discount_type`='percentage', `discount_amount`='10.00';
+INSERT INTO campaigns SET `id`='5', `name`='test', `discount_type`='percentage', `discount_amount`='11.00';
+INSERT INTO campaigns SET `id`='6', `name`='test', `discount_type`='percentage', `discount_amount`='11.00';
+INSERT INTO campaigns SET `id`='7', `name`='test', `discount_type`='percentage', `discount_amount`='1122.00';
+
+DROP TABLE IF EXISTS orders;
+
+CREATE TABLE `orders` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `product_id` int NOT NULL DEFAULT '0',
+  `quantity` int NOT NULL DEFAULT '0',
+  `customer_name` varchar(200) NOT NULL DEFAULT '0',
+  `customer_email` varchar(200) NOT NULL DEFAULT '0',
+  `customer_address` text NOT NULL,
+  `total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `shipping_cost` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+
+INSERT INTO orders SET `id`='1', `product_id`='1', `quantity`='1', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='48.75', `shipping_cost`='75.00';
+INSERT INTO orders SET `id`='2', `product_id`='1', `quantity`='5', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='243.75', `shipping_cost`='0.00';
+INSERT INTO orders SET `id`='3', `product_id`='1', `quantity`='5', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='243.75', `shipping_cost`='0.00';
 
 DROP TABLE IF EXISTS products;
 

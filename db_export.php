@@ -14,8 +14,8 @@ if ($conn->connect_error) {
   }
   
   $sql = "";
-  $sql .= "CREATE DATABASE IF NOT EXISTS $dbname;\n\n";
-  $sql .= "USE $dbname;\n\n";
+  $sql .= "CREATE DATABASE IF NOT EXISTS ".DB_NAME.";\n\n";
+  $sql .= "USE ".DB_NAME.";\n\n";
   foreach ($tables as $table) {
     $result = $conn->query("SELECT * FROM $table");
     $columns = array();
