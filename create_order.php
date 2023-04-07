@@ -1,10 +1,11 @@
 <?php
+
 /**
-* Sipariş oluşturma için istek gönderilecek sayfa
-*
-* @author  Mertcan EKREN <mertcanekren@gmail.com>
-* @link mertcanekren.github.io
-*/
+ * Sipariş oluşturma için istek gönderilecek sayfa
+ *
+ * @author  Mertcan EKREN <mertcanekren@gmail.com>
+ * @link mertcanekren.github.io
+ */
 
 include 'db_connect.php';
 
@@ -19,15 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $customer_address = $_POST['customer_address'];
 
         // Ürün stok kontrolü
-        $product_query = "SELECT stock_quantity, list_price FROM products WHERE id = $product_id";
-        $product_result = mysqli_query($conn, $product_query);
-        if (mysqli_num_rows($product_result) > 0) {
-            $product_row = mysqli_fetch_assoc($product_result);
+        $product_query = "SELECT stock_quantity, list_price FROM products WHERE id = :product_id";
+        $product_insert = $pdo->prepare($product_query);
+        $product_insert->execute(['product_id' => $product_id]);
+
+        if ($product_insert->rowCount() > 0) {
+            $product_row = $product_insert->fetch(PDO::FETCH_ASSOC);
             $product_stock = $product_row['stock_quantity'];
             $product_price = $product_row['list_price'];
             if ($quantity > $product_stock) {
                 http_response_code(400);
-                echo json_encode(array("status" => false,"message" => "Üzgünüz, bu üründen yeterli stok yok."));
+                echo json_encode(array("status" => false, "message" => "Üzgünüz, bu üründen yeterli stok yok."));
             } else {
 
                 // Sipariş tutarı hesaplama
@@ -35,26 +38,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Kargo bedeli hesaplama
                 $shipping_cost = $total_price >= 200 ? 0 : 75;
-                
+
                 // Sipariş oluşturma
-                $order_query = "INSERT INTO orders (product_id, quantity, customer_name, customer_email, customer_address, total_price, shipping_cost) VALUES ($product_id, $quantity, '$customer_name', '$customer_email', '$customer_address', $total_price, $shipping_cost)";
-                if (mysqli_query($conn, $order_query)) {
+                $order_query = "INSERT INTO orders (product_id, quantity, customer_name, customer_email, customer_address, total_price, shipping_cost) VALUES (:product_id, :quantity, :customer_name, :customer_email, :customer_address, :total_price, :shipping_cost)";
+                $order_insert = $pdo->prepare($order_query);
+                $order_insert->execute([
+                    'product_id' => $product_id,
+                    'quantity' => $quantity,
+                    'customer_name' => $customer_name,
+                    'customer_email' => $customer_email,
+                    'customer_address' => $customer_address,
+                    'total_price' => $total_price,
+                    'shipping_cost' => $shipping_cost
+                ]);
+                // Yeni sipariş eklenmişse, 201 Created HTTP durum kodu ve yeni kaydın ID'siyle birlikte bir JSON yanıtı döndür
+                if ($order_insert->rowCount() > 0) {
+                    $new_order_id = $pdo->lastInsertId();
                     http_response_code(201);
-                    echo json_encode(array("product_id" => $product_id, "quantity" => $quantity, "customer_name" => $customer_name, "customer_email" => $customer_email, "customer_address" => $customer_address, "total_price" => $total_price, "shipping_cost" => $shipping_cost));
+                    echo json_encode(array("status" => true, "data" => [
+                        "id" => $new_order_id,
+                        "product_id" => $product_id,
+                        "quantity" => $quantity,
+                        "customer_name" => $customer_name,
+                        "customer_email" => $customer_email,
+                        "customer_address" => $customer_address,
+                        "total_price" => $total_price,
+                        "shipping_cost" => $shipping_cost
+                    ]));
                 } else {
+                    // Eğer yeni sipariş eklenememişse, 500 Internal Server Error HTTP durum kodu ve hata mesajıyla birlikte bir JSON yanıtı döndür
                     http_response_code(500);
-                    echo json_encode(array("message" => "Siparis olusturulamadi."));
+                    echo json_encode(array("status" => false, "message" => "Siparis olusturulamadi."));
                 }
             }
         } else {
             http_response_code(400);
-            echo json_encode(array("message" => "Almak istediginiz urun bulunamadi."));
+            echo json_encode(array("status" => false, "message" => "Almak istediginiz urun bulunamadi."));
         }
-    }else{
+    } else {
         http_response_code(400);
-        echo json_encode(array("status" => false,"message" => "Lutfen tum alanlari doldurunuz."));
+        echo json_encode(array("status" => false, "message" => "Lutfen tum alanlari doldurunuz."));
     }
-}else{
+} else {
     http_response_code(400);
-    echo json_encode(array("status" => false,"message" => "POST methodu ile istek yapınız"));
+    echo json_encode(array("status" => false, "message" => "POST methodu ile istek yapınız"));
 }
