@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Yeni kampanya oluşturmak için istek gönderilecek sayfa
  *
@@ -9,8 +8,8 @@
 
 include 'db_connect.php';
 
-if($_POST){
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['campaign_name'] != "" && $_POST['discount_type'] != "" && $_POST['discount_amount'] != "") {
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    if ($_POST['campaign_name'] != "" && $_POST['discount_type'] != "" && $_POST['discount_amount'] != "") {
 
         // Kampanya verilerini al
         $campaign_name = $_POST['campaign_name'];
@@ -37,5 +36,8 @@ if($_POST){
         http_response_code(400);
         echo json_encode(array("status" => false,"message" => "Lutfen tum alanlari doldurunuz."));
     }
+}else{
+    http_response_code(400);
+    echo json_encode(array("status" => false,"message" => "POST methodu ile istek yapınız"));
 }
-
+?>

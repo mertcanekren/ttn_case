@@ -8,8 +8,8 @@
 
 include 'db_connect.php';
 
-if ($_POST) {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['product_id'] != "" && $_POST['quantity'] != "" && $_POST['customer_name'] != "" && $_POST['customer_email'] != "" && $_POST['customer_address'] != "") {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_POST['product_id'] != "" && $_POST['quantity'] != "" && $_POST['customer_name'] != "" && $_POST['customer_email'] != "" && $_POST['customer_address'] != "") {
 
         // Alınan sipariş bilgileri
         $product_id = $_POST['product_id'];
@@ -50,5 +50,11 @@ if ($_POST) {
             http_response_code(400);
             echo json_encode(array("message" => "Almak istediginiz urun bulunamadi."));
         }
+    }else{
+        http_response_code(400);
+        echo json_encode(array("status" => false,"message" => "Lutfen tum alanlari doldurunuz."));
     }
+}else{
+    http_response_code(400);
+    echo json_encode(array("status" => false,"message" => "POST methodu ile istek yapınız"));
 }
