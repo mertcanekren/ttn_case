@@ -10,33 +10,50 @@ CREATE TABLE `campaigns` (
   `discount_type` varchar(200) NOT NULL DEFAULT '0',
   `discount_amount` decimal(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO campaigns SET `id`='1', `name`='test', `discount_type`='percentage', `discount_amount`='10.00';
-INSERT INTO campaigns SET `id`='2', `name`='test', `discount_type`='percentage', `discount_amount`='10.00';
-INSERT INTO campaigns SET `id`='3', `name`='test', `discount_type`='percentage', `discount_amount`='10.00';
-INSERT INTO campaigns SET `id`='4', `name`='test', `discount_type`='percentage', `discount_amount`='10.00';
-INSERT INTO campaigns SET `id`='5', `name`='test', `discount_type`='percentage', `discount_amount`='11.00';
-INSERT INTO campaigns SET `id`='6', `name`='test', `discount_type`='percentage', `discount_amount`='11.00';
-INSERT INTO campaigns SET `id`='7', `name`='test', `discount_type`='percentage', `discount_amount`='1122.00';
+INSERT INTO campaigns SET `id`='1', `name`='test kampanya', `discount_type`='percentage', `discount_amount`='24.00';
+INSERT INTO campaigns SET `id`='2', `name`='test kampanya', `discount_type`='percentage', `discount_amount`='24.00';
+INSERT INTO campaigns SET `id`='3', `name`='test kampanya', `discount_type`='percentage', `discount_amount`='24.00';
+INSERT INTO campaigns SET `id`='4', `name`='test kampanya', `discount_type`='percentage', `discount_amount`='24.00';
+
+DROP TABLE IF EXISTS order_products;
+
+CREATE TABLE `order_products` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `order_id` int NOT NULL DEFAULT '0',
+  `product_id` int NOT NULL DEFAULT '0',
+  `quantity` int NOT NULL DEFAULT '0',
+  `list_price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+
+INSERT INTO order_products SET `id`='1', `order_id`='10', `product_id`='4', `quantity`='2', `list_price`='35.75', `total_price`='71.50';
 
 DROP TABLE IF EXISTS orders;
 
 CREATE TABLE `orders` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `product_id` int NOT NULL DEFAULT '0',
-  `quantity` int NOT NULL DEFAULT '0',
   `customer_name` varchar(200) NOT NULL DEFAULT '0',
   `customer_email` varchar(200) NOT NULL DEFAULT '0',
   `customer_address` text NOT NULL,
   `total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `shipping_cost` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `createtime` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO orders SET `id`='1', `product_id`='1', `quantity`='1', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='48.75', `shipping_cost`='75.00';
-INSERT INTO orders SET `id`='2', `product_id`='1', `quantity`='5', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='243.75', `shipping_cost`='0.00';
-INSERT INTO orders SET `id`='3', `product_id`='1', `quantity`='5', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='243.75', `shipping_cost`='0.00';
+INSERT INTO orders SET `id`='1', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='115.70', `shipping_cost`='75.00', `createtime`='1680869121';
+INSERT INTO orders SET `id`='2', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='18.20', `shipping_cost`='75.00', `createtime`='1680869774';
+INSERT INTO orders SET `id`='3', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='18.20', `shipping_cost`='75.00', `createtime`='1680869778';
+INSERT INTO orders SET `id`='4', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680869987';
+INSERT INTO orders SET `id`='5', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870220';
+INSERT INTO orders SET `id`='6', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870370';
+INSERT INTO orders SET `id`='7', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870389';
+INSERT INTO orders SET `id`='8', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870401';
+INSERT INTO orders SET `id`='9', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870443';
+INSERT INTO orders SET `id`='10', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='71.50', `shipping_cost`='75.00', `createtime`='1680876474';
 
 DROP TABLE IF EXISTS products;
 

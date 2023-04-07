@@ -21,3 +21,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET'){
     http_response_code(400);
     echo json_encode(array("status" => false,"message" => "POST methodu ile istek yapınız"));
 }
+?>

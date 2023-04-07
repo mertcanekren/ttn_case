@@ -10,76 +10,113 @@
 include 'db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($_POST['product_id'] != "" && $_POST['quantity'] != "" && $_POST['customer_name'] != "" && $_POST['customer_email'] != "" && $_POST['customer_address'] != "") {
 
-        // Alınan sipariş bilgileri
-        $product_id = $_POST['product_id'];
-        $quantity = $_POST['quantity'];
+    if ($_POST['customer_name'] != "" && $_POST['customer_email'] != "" && $_POST['customer_address'] != "") {
+
+        //print_r($_POST);
         $customer_name = $_POST['customer_name'];
         $customer_email = $_POST['customer_email'];
         $customer_address = $_POST['customer_address'];
 
-        // Ürün stok kontrolü
-        $product_query = "SELECT stock_quantity, list_price FROM products WHERE id = :product_id";
-        $product_insert = $pdo->prepare($product_query);
-        $product_insert->execute(['product_id' => $product_id]);
+        $total_price = 0;
 
-        if ($product_insert->rowCount() > 0) {
-            $product_row = $product_insert->fetch(PDO::FETCH_ASSOC);
-            $product_stock = $product_row['stock_quantity'];
-            $product_price = $product_row['list_price'];
-            if ($quantity > $product_stock) {
-                http_response_code(400);
-                echo json_encode(array("status" => false, "message" => "Üzgünüz, bu üründen yeterli stok yok."));
-            } else {
+        $products = array();
 
-                // Sipariş tutarı hesaplama
-                $total_price = $product_price * $quantity;
+        // Eğer birden fazla ürün gelirse
+        if (is_array($_POST["product_id"])) {
 
-                // Kargo bedeli hesaplama
-                $shipping_cost = $total_price >= 200 ? 0 : 75;
+            $product_c = -1;
+            // Ürün ve ürün stok kontrolleri yapılıyor
+            foreach ($_POST["product_id"] as $product_id) {
+                $product_c++;
+                $quantity = $_POST["quantity"][$product_c];
 
-                // Sipariş oluşturma
-                $order_query = "INSERT INTO orders (product_id, quantity, customer_name, customer_email, customer_address, total_price, shipping_cost) VALUES (:product_id, :quantity, :customer_name, :customer_email, :customer_address, :total_price, :shipping_cost)";
-                $order_insert = $pdo->prepare($order_query);
-                $order_insert->execute([
-                    'product_id' => $product_id,
-                    'quantity' => $quantity,
-                    'customer_name' => $customer_name,
-                    'customer_email' => $customer_email,
-                    'customer_address' => $customer_address,
-                    'total_price' => $total_price,
-                    'shipping_cost' => $shipping_cost
-                ]);
-                // Yeni sipariş eklenmişse, 201 Created HTTP durum kodu ve yeni kaydın ID'siyle birlikte bir JSON yanıtı döndür
-                if ($order_insert->rowCount() > 0) {
-                    $new_order_id = $pdo->lastInsertId();
-                    http_response_code(201);
-                    echo json_encode(array("status" => true, "data" => [
-                        "id" => $new_order_id,
-                        "product_id" => $product_id,
-                        "quantity" => $quantity,
-                        "customer_name" => $customer_name,
-                        "customer_email" => $customer_email,
-                        "customer_address" => $customer_address,
-                        "total_price" => $total_price,
-                        "shipping_cost" => $shipping_cost
-                    ]));
+                $product_query = "SELECT stock_quantity, list_price FROM products WHERE id = :product_id";
+                $product_insert = $pdo->prepare($product_query);
+                $product_insert->execute(['product_id' => $product_id]);
+
+                if ($product_insert->rowCount() > 0) {
+                    $product_row = $product_insert->fetch(PDO::FETCH_ASSOC);
+                    $product_stock = $product_row['stock_quantity'];
+                    $product_price = $product_row['list_price'];
+                    if ($quantity > $product_stock) {
+                        http_response_code(400);
+                        echo json_encode(array("status" => false, "message" => "Üründen yeterli stok yok."));
+                        exit();
+                    } else {
+                        $total_price += $product_price * $quantity;
+                        // sipariş ürünleri geçici olarak bir array üzerinde toplanıyor
+                        $temp_products = array();
+                        $temp_products["product_id"] = $product_id;
+                        $temp_products["quantity"] = $quantity;
+                        $temp_products["list_price"] = $product_price;
+                        $temp_products["total_price"] = $product_price * $quantity;
+                        $products[] = $temp_products;
+                    }
                 } else {
-                    // Eğer yeni sipariş eklenememişse, 500 Internal Server Error HTTP durum kodu ve hata mesajıyla birlikte bir JSON yanıtı döndür
-                    http_response_code(500);
-                    echo json_encode(array("status" => false, "message" => "Siparis olusturulamadi."));
+                    http_response_code(400);
+                    echo json_encode(array("status" => false, "message" => "Almak istediğiniz ürün bulunamadı."));
+                    exit();
                 }
+            }
+
+            // Kargo bedeli hesaplama
+            $shipping_cost = $total_price >= 200 ? 0 : 75;
+
+            // Sipariş oluşturma
+            $order_query = "INSERT INTO orders (customer_name, customer_email, customer_address, total_price, shipping_cost, createtime) VALUES (:customer_name, :customer_email, :customer_address, :total_price, :shipping_cost, :createtime)";
+            $order_insert = $pdo->prepare($order_query);
+            $order_insert->execute([
+                'customer_name' => $customer_name,
+                'customer_email' => $customer_email,
+                'customer_address' => $customer_address,
+                'total_price' => $total_price,
+                'shipping_cost' => $shipping_cost,
+                'createtime' => time()
+            ]);
+            if ($order_insert->rowCount() > 0) {
+                
+                $new_order_id = $pdo->lastInsertId();
+                http_response_code(201);
+                echo json_encode(array("status" => true, "data" => [
+                    "id" => $new_order_id,
+                    "customer_name" => $customer_name,
+                    "customer_email" => $customer_email,
+                    "customer_address" => $customer_address,
+                    "total_price" => $total_price,
+                    "shipping_cost" => $shipping_cost
+                ]));
+
+                foreach ($products as $product) {
+                    
+                    $product_id = $product["product_id"];
+                    $quantity = $product["quantity"];
+                    $list_price = $product["list_price"];
+                    $total_price = $product["total_price"];
+    
+                    $product_query = "INSERT INTO order_products (order_id, product_id, quantity, list_price, total_price) VALUES (:order_id, :product_id, :quantity, :list_price, :total_price)";
+                    $product_insert = $pdo->prepare($product_query);
+                    $product_insert->execute([
+                        'order_id' => $new_order_id,
+                        'product_id' => $product_id,
+                        'quantity' => $quantity,
+                        'list_price' => $list_price,
+                        'total_price' => $total_price,
+                    ]);
+                }
+
+            } else {
+                // Eğer yeni sipariş eklenememişse, 500 Internal Server Error HTTP durum kodu ve hata mesajıyla birlikte bir JSON yanıtı döndür
+                http_response_code(500);
+                echo json_encode(array("status" => false, "message" => "Siparis olusturulamadi."));
             }
         } else {
             http_response_code(400);
-            echo json_encode(array("status" => false, "message" => "Almak istediginiz urun bulunamadi."));
+            echo json_encode(array("status" => false, "message" => "Ürün datası array tipinde gönderilmesi gerekmektedir."));
+            exit();
         }
     } else {
         http_response_code(400);
-        echo json_encode(array("status" => false, "message" => "Lutfen tum alanlari doldurunuz."));
+        echo json_encode(array("status" => false, "message" => "Müşteri bilgileri eksik. Lütfen doldurunuz."));
     }
-} else {
-    http_response_code(400);
-    echo json_encode(array("status" => false, "message" => "POST methodu ile istek yapınız"));
 }
