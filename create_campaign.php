@@ -10,7 +10,7 @@
 include 'db_connect.php';
 
 if($_POST){
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['campaign_name']) && isset($_POST['discount_type']) && isset($_POST['discount_amount'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['campaign_name'] != "" && $_POST['discount_type'] != "" && $_POST['discount_amount'] != "") {
 
         // Kampanya verilerini al
         $campaign_name = $_POST['campaign_name'];
@@ -27,15 +27,15 @@ if($_POST){
         if ($stmt->affected_rows > 0) {
             $new_campaign_id = $stmt->insert_id;
             http_response_code(201);
-            echo json_encode(array("id" => $new_campaign_id, "name" => $campaign_name, "discount_type" => $discount_type, "discount_amount" => $discount_amount));
+            echo json_encode(array("status" => true, "data" => ["id" => $new_campaign_id, "name" => $campaign_name, "discount_type" => $discount_type, "discount_amount" => $discount_amount]));
         } else {
             // Eğer yeni kampanya eklenememişse, 500 Internal Server Error HTTP durum kodu ve hata mesajıyla birlikte bir JSON yanıtı döndür
             http_response_code(500);
-            echo json_encode(array("message" => "Yeni kampanya eklenirken bir hata olustu."));
+            echo json_encode(array("status"=> false, "message" => "Yeni kampanya eklenirken bir hata olustu."));
         }
     } else {
         http_response_code(400);
-        echo json_encode(array("message" => "Lutfen tum alanlari doldurunuz."));
+        echo json_encode(array("status" => false,"message" => "Lutfen tum alanlari doldurunuz."));
     }
 }
 

@@ -1,5 +1,10 @@
 <?php
-
+/**
+* Veritabanı bağlantısını gerçekleştirir.
+*
+* @author  Mertcan EKREN <mertcanekren@gmail.com>
+* @link mertcanekren.github.io
+*/
 include 'config.php';
 
 $servername = "localhost";

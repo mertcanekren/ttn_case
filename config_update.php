@@ -1,4 +1,10 @@
 <?php
+/**
+* config.php dosyasını güncellemek için kullanılır
+*
+* @author  Mertcan EKREN <mertcanekren@gmail.com>
+* @link mertcanekren.github.io
+*/
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $newUsername = $_POST['username'];
@@ -16,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(file_put_contents('config.php', $configFile)){
         echo "Veritabanı bilgileri başarıyla güncellendi!";
     }else{
-        echo "Veritabanı bilgileri güncellenemdi. Lütfen config.php dosyasını güncelleyiniz.";
+        echo "Veritabanı bilgileri güncellenemdi. Lütfen config.php dosyasını veritabani bilgileriniz ile güncelleyiniz.";
     }
 }
 
@@ -41,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="password" name="password" id="password">
             </td>
         </tr>
-       
         <tr>
             <td>
             </td>

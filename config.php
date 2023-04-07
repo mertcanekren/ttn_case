@@ -1,6 +1,11 @@
 <?php
+/**
+* Veritabanı tablo ve mysql kullanıcı bilgilerin
+*
+* @author  Mertcan EKREN <mertcanekren@gmail.com>
+* @link mertcanekren.github.io
+*/
 
-// Veritabanı tablo ve  kullanıcı bilgileri
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_NAME', 'mertcan_ekren_case');

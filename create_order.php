@@ -1,11 +1,15 @@
 <?php
+/**
+* Sipariş oluşturma için istek gönderilecek sayfa
+*
+* @author  Mertcan EKREN <mertcanekren@gmail.com>
+* @link mertcanekren.github.io
+*/
 
 include 'db_connect.php';
 
-
-// Sipariş oluşturma
 if ($_POST) {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['product_id'] != "" && $_POST['quantity'] != "" && $_POST['customer_name'] != "" && $_POST['customer_email'] != "" && $_POST['customer_address'] != "") {
 
         // Alınan sipariş bilgileri
         $product_id = $_POST['product_id'];
@@ -22,13 +26,16 @@ if ($_POST) {
             $product_stock = $product_row['stock_quantity'];
             $product_price = $product_row['list_price'];
             if ($quantity > $product_stock) {
-                echo "Üzgünüz, bu üründen yeterli stok yok.";
+                http_response_code(400);
+                echo json_encode(array("status" => false,"message" => "Üzgünüz, bu üründen yeterli stok yok."));
             } else {
 
                 // Sipariş tutarı hesaplama
                 $total_price = $product_price * $quantity;
+
                 // Kargo bedeli hesaplama
                 $shipping_cost = $total_price >= 200 ? 0 : 75;
+                
                 // Sipariş oluşturma
                 $order_query = "INSERT INTO orders (product_id, quantity, customer_name, customer_email, customer_address, total_price, shipping_cost) VALUES ($product_id, $quantity, '$customer_name', '$customer_email', '$customer_address', $total_price, $shipping_cost)";
                 if (mysqli_query($conn, $order_query)) {
