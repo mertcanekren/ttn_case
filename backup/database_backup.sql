@@ -25,10 +25,17 @@ CREATE TABLE `order_products` (
   `list_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO order_products SET `id`='1', `order_id`='10', `product_id`='4', `quantity`='2', `list_price`='35.75', `total_price`='71.50';
 INSERT INTO order_products SET `id`='2', `order_id`='11', `product_id`='1', `quantity`='2', `list_price`='48.75', `total_price`='97.50';
+INSERT INTO order_products SET `id`='3', `order_id`='12', `product_id`='1', `quantity`='3', `list_price`='48.75', `total_price`='146.25';
+INSERT INTO order_products SET `id`='4', `order_id`='13', `product_id`='1', `quantity`='3', `list_price`='48.75', `total_price`='146.25';
+INSERT INTO order_products SET `id`='5', `order_id`='14', `product_id`='1', `quantity`='3', `list_price`='48.75', `total_price`='146.25';
+INSERT INTO order_products SET `id`='6', `order_id`='15', `product_id`='1', `quantity`='3', `list_price`='48.75', `total_price`='146.25';
+INSERT INTO order_products SET `id`='7', `order_id`='16', `product_id`='1', `quantity`='3', `list_price`='48.75', `total_price`='146.25';
+INSERT INTO order_products SET `id`='8', `order_id`='17', `product_id`='1', `quantity`='3', `list_price`='48.75', `total_price`='146.25';
+INSERT INTO order_products SET `id`='9', `order_id`='18', `product_id`='1', `quantity`='3', `list_price`='48.75', `total_price`='146.25';
 
 DROP TABLE IF EXISTS orders;
 
@@ -38,22 +45,32 @@ CREATE TABLE `orders` (
   `customer_email` varchar(200) NOT NULL DEFAULT '0',
   `customer_address` text NOT NULL,
   `total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `discounted_price` decimal(10,2) DEFAULT NULL,
+  `without_discounted_price` decimal(10,2) DEFAULT NULL,
+  `campaign_id` int(11) DEFAULT NULL,
   `shipping_cost` decimal(10,2) NOT NULL DEFAULT '0.00',
   `createtime` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO orders SET `id`='1', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='115.70', `shipping_cost`='75.00', `createtime`='1680869121';
-INSERT INTO orders SET `id`='2', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='18.20', `shipping_cost`='75.00', `createtime`='1680869774';
-INSERT INTO orders SET `id`='3', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='18.20', `shipping_cost`='75.00', `createtime`='1680869778';
-INSERT INTO orders SET `id`='4', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680869987';
-INSERT INTO orders SET `id`='5', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870220';
-INSERT INTO orders SET `id`='6', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870370';
-INSERT INTO orders SET `id`='7', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870389';
-INSERT INTO orders SET `id`='8', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870401';
-INSERT INTO orders SET `id`='9', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `shipping_cost`='75.00', `createtime`='1680870443';
-INSERT INTO orders SET `id`='10', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='71.50', `shipping_cost`='75.00', `createtime`='1680876474';
-INSERT INTO orders SET `id`='11', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='97.50', `shipping_cost`='75.00', `createtime`='1681243483';
+INSERT INTO orders SET `id`='1', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='115.70', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680869121';
+INSERT INTO orders SET `id`='2', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='18.20', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680869774';
+INSERT INTO orders SET `id`='3', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='18.20', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680869778';
+INSERT INTO orders SET `id`='4', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680869987';
+INSERT INTO orders SET `id`='5', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680870220';
+INSERT INTO orders SET `id`='6', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680870370';
+INSERT INTO orders SET `id`='7', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680870389';
+INSERT INTO orders SET `id`='8', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680870401';
+INSERT INTO orders SET `id`='9', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='51.20', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680870443';
+INSERT INTO orders SET `id`='10', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='71.50', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1680876474';
+INSERT INTO orders SET `id`='11', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='97.50', `discounted_price`='', `without_discounted_price`='', `campaign_id`='', `shipping_cost`='75.00', `createtime`='1681243483';
+INSERT INTO orders SET `id`='12', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='146.25', `discounted_price`='0.00', `without_discounted_price`='', `campaign_id`='0', `shipping_cost`='75.00', `createtime`='1681245678';
+INSERT INTO orders SET `id`='13', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='146.25', `discounted_price`='1.00', `without_discounted_price`='', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681245695';
+INSERT INTO orders SET `id`='14', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='146.25', `discounted_price`='1.00', `without_discounted_price`='', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681245723';
+INSERT INTO orders SET `id`='15', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='146.25', `discounted_price`='1.00', `without_discounted_price`='', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681245731';
+INSERT INTO orders SET `id`='16', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='146.25', `discounted_price`='1.00', `without_discounted_price`='', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681245841';
+INSERT INTO orders SET `id`='17', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='146.25', `discounted_price`='138.94', `without_discounted_price`='', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681245858';
+INSERT INTO orders SET `id`='18', `customer_name`='mertcan', `customer_email`='mertcanekren@gmail.com', `customer_address`='kükürtlü', `total_price`='138.94', `discounted_price`='138.94', `without_discounted_price`='146.25', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681246069';
 
 DROP TABLE IF EXISTS products;
 
