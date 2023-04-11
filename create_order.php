@@ -63,6 +63,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Kargo bedeli hesaplama
             $shipping_cost = $total_price >= 200 ? 0 : 75;
 
+            // Yüzdelik olarak indirimli kampanyaları hesaplama
+            $campaigns_query_per = "SELECT * FROM campaigns WHERE discount_type=:discount_type order by minimum_campaign_amount desc";
+            $campaigns_query_per = $pdo->prepare($campaigns_query_per);
+            $campaigns_query_per->execute(['discount_type' => "percentage"]);
+            if ($campaigns_query_per->rowCount() > 0) {
+                // Yüzdelik olarak eklenmiş olan kampanyalar kontrol ediliyor
+                while ($campaigns_query_per_row = $campaigns_query_per->fetch(PDO::FETCH_ASSOC)) {
+                    // Sipariş tutarına eşit yada yüksek olan kampanya seçiliyor 
+                    if ($total_price >= $campaigns_query_per_row['minimum_campaign_amount']) {
+                        $indirim_tutari = $total_price * ($campaigns_query_per_row['discount_amount'] / $campaigns_query_per_row['minimum_campaign_amount']);
+                        echo "toplam tutar: ".$total_price." indirim orani: ".$campaigns_query_per_row['discount_amount']." indirim tutarı: ".$indirim_tutari." son tutar :".($total_price-$indirim_tutari);
+                        break;
+                    }
+                }
+                /*
+                // eğer sipariş tutarı 100tl üzeriyse
+                */
+            }
+
+            
+
+            /*
             // Sipariş oluşturma
             $order_query = "INSERT INTO orders (customer_name, customer_email, customer_address, total_price, shipping_cost, createtime) VALUES (:customer_name, :customer_email, :customer_address, :total_price, :shipping_cost, :createtime)";
             $order_insert = $pdo->prepare($order_query);
@@ -110,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 http_response_code(500);
                 echo json_encode(array("status" => false, "message" => "Siparis olusturulamadi."));
             }
+            */
         } else {
             http_response_code(400);
             echo json_encode(array("status" => false, "message" => "Ürün datası array tipinde gönderilmesi gerekmektedir."));
