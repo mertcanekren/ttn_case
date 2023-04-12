@@ -49,6 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $temp_products["list_price"] = $product_price;
                         $temp_products["total_price"] = $product_price * $quantity;
                         $products[] = $temp_products;
+                        
+                        // Ürün stok bilgisini alınan stok adedine göre veritabanında güncellenir
+                        $update_stock_query = "UPDATE products SET stock_quantity = stock_quantity - :quantity WHERE id = :product_id";
+                        $update_stock_query = $pdo->prepare($update_stock_query);
+                        if(!$update_stock_query->execute(['quantity' => $quantity, 'product_id' => $product_id])){
+                            http_response_code(500);
+                            echo json_encode(array("status" => false, "message" => "Stok bilgileri güncellenemedi."));
+                            exit();
+                        }
                     }
                 } else {
                     http_response_code(400);
