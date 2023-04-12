@@ -10,7 +10,7 @@
 include 'db_connect.php';
 
 
-$query = "SELECT * FROM products";
+$query = "SELECT * FROM books";
 $stmt = $pdo->query($query);
 
 
