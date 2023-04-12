@@ -12,16 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($_POST['customer_name'] != "" && $_POST['customer_email'] != "" && $_POST['customer_address'] != "") {
 
-        //print_r($_POST);
         $customer_name = $_POST['customer_name'];
         $customer_email = $_POST['customer_email'];
         $customer_address = $_POST['customer_address'];
 
         $total_price = 0;
-
         $products = array();
 
-        // Eğer birden fazla ürün gelirse
+        // post ile gelen ürünler
         if (is_array($_POST["product_id"])) {
 
             $product_c = -1;
@@ -94,19 +92,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
+            // müşteri bilgileri kontrol ediliyor
+            $customer_check_query = "SELECT id,customer_email FROM customers WHERE customer_email = :customer_email";
+            $customer_check = $pdo->prepare($customer_check_query);
+            $customer_check->execute(['customer_email' => $customer_email]);
+            // Müşteri mail adresi veritabanında daha önce varsa müşteri id bilgisi alınıyor
+            if ($customer_check->rowCount() > 0) {
+                $customer_data = $customer_check->fetch(PDO::FETCH_ASSOC);
+                $customer_id = $customer_data["id"];
+            }else{
+                // müşteri daha önce veritabanında kayıtlı değilse kayıt ediliyor
+                $customer_insert = "INSERT INTO customers (customer_name, customer_email, customer_address,createtime) VALUES (:customer_name, :customer_email, :customer_address,:createtime)";
+                $customer_insert = $pdo->prepare($customer_insert);
+                $customer_insert->execute([
+                    'customer_name' => $customer_name,
+                    'customer_email' => $customer_email,
+                    'customer_address' => $customer_address,
+                    'createtime' => time(),
+                ]);
+                if ($customer_insert->rowCount() > 0) {
+                    // Kayıt edilen müşteri id bilgisi alınıyor
+                    $customer_id = $new_customer_id = $pdo->lastInsertId();
+                }else{
+                    http_response_code(500);
+                    echo json_encode(array("status" => false, "message" => "Müşteri bilgileri kayıt edilemedi."));
+                    exit();
+                }
+            }
+
             // Sipariş oluşturma
-            $order_query = "INSERT INTO orders (customer_name, customer_email, customer_address, total_price, shipping_cost, createtime,discounted_price,without_discounted_price,campaign_id) VALUES (:customer_name, :customer_email, :customer_address, :total_price, :shipping_cost, :createtime, :discounted_price,:without_discounted_price, :campaign_id)";
+            $order_query = "INSERT INTO orders (total_price, shipping_cost, createtime,discounted_price,without_discounted_price,campaign_id, customer_id) VALUES (:total_price, :shipping_cost, :createtime, :discounted_price,:without_discounted_price, :campaign_id, :customer_id)";
             $order_insert = $pdo->prepare($order_query);
             $order_insert->execute([
-                'customer_name' => $customer_name,
-                'customer_email' => $customer_email,
-                'customer_address' => $customer_address,
                 'total_price' => $total_price,
                 'shipping_cost' => $shipping_cost,
                 'createtime' => time(),
                 'discounted_price' => $order_discounted_price,
                 'without_discounted_price' => $order_without_discounted_price,
                 'campaign_id' => $order_campaign_id,
+                'customer_id' => $customer_id,
             ]);
             if ($order_insert->rowCount() > 0) {
                 
@@ -143,6 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Eğer yeni sipariş eklenememişse, 500 Internal Server Error HTTP durum kodu ve hata mesajıyla birlikte bir JSON yanıtı döndür
                 http_response_code(500);
                 echo json_encode(array("status" => false, "message" => "Siparis olusturulamadi."));
+                exit();
             }
         } else {
             http_response_code(400);
@@ -152,5 +177,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         http_response_code(400);
         echo json_encode(array("status" => false, "message" => "Müşteri bilgileri eksik. Lütfen doldurunuz."));
+        exit();
     }
+}else{
+    http_response_code(400);
+    echo json_encode(array("status" => false, "message" => "Sadece post methodu ile istek gönderiniz."));
+    exit();
 }
