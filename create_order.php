@@ -125,6 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                          */
                         $order_product["total_price"] = ($order_product["total_price"]-$order_product["list_price"]);
                         $check_order_campaign = true;
+
+                        // siparişin indirimsiz tutarı
+                        $order_without_discounted_price = $total_price;
+
                         $total_price = 0;
                         break;
                     }else{
@@ -135,6 +139,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 // sipariş ürzerinde olan aynı yazarın bir ürününün fiyatı sıfırlanıyor
                                 $order_product["total_price"] = 0;
                                 $check_order_campaign = true;
+
+                                // siparişin indirimsiz tutarı
+                                $order_without_discounted_price = $total_price;
+                                
                                 $total_price = 0;
                                 break;
                             }
@@ -144,6 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 // yazar kampanyası kontrollerinden sonra toplam sipariş fiyatı tekrar toplanıyor
                 if($check_order_campaign == true){
+                    
                     foreach ($products as $product_total) {
                         $total_price += $product_total["total_price"];
                     }
@@ -264,13 +273,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ]);
                         if ($product_insert->rowCount() > 0) {
                             // Ürün stok bilgisini alınan stok adedine göre veritabanında güncellenir
-                            $update_stock_query = "UPDATE books SET stock_quantity = stock_quantity - :quantity WHERE id = :product_id";
+                            /*$update_stock_query = "UPDATE books SET stock_quantity = stock_quantity - :quantity WHERE id = :product_id";
                             $update_stock_query = $pdo->prepare($update_stock_query);
                             if(!$update_stock_query->execute(['quantity' => $quantity, 'product_id' => $product_id])){
                                 http_response_code(500);
                                 echo json_encode(array("status" => false, "message" => "Stok bilgileri güncellenemedi."));
                                 exit();
-                            }
+                            }*/
                         }else{
                             http_response_code(500);
                             echo json_encode(array("status" => false, "message" => "Sipariş kayıdı oluşturulurken hata oluştu."));
