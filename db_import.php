@@ -15,14 +15,15 @@ $handle = fopen($backup_file, "r");
 
 if ($handle) {
     $query = "";
+
     while (!feof($handle)) {
         $line = fgets($handle);
 
         if (substr($line, -2) == ";\n" || substr($line, -2) == ";\r") {
             $query .= $line;
 
-            if (!$conn->query($query)) {
-                echo "Hata: " . $conn->error . "<br>";
+            if (!$pdo->query($query)) {
+                echo "Hata: " . $pdo->error . "<br>";
             }
             $query = "";
         } else {
@@ -30,8 +31,8 @@ if ($handle) {
         }
     }
     fclose($handle);
-    echo "Yedek dosyasındaki veriler başarıyla içe aktarıldı.";
+    echo "Veriler başarıyla içe aktarıldı.";
 } else {
-    echo "Yedek dosyası açılamadı.";
+    echo "Veritabanı dosyası açılamadı.";
 }
 ?>

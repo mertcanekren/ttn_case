@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS mertcan_ekren_case;
-
-USE mertcan_ekren_case;
-
 DROP TABLE IF EXISTS authors;
 
 CREATE TABLE `authors` (
@@ -67,25 +63,24 @@ CREATE TABLE `campaigns` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO campaigns SET `id`='1', `name`='100 TL Üstü Yüzde 5 İndirim', `discount_type`='percentage', `discount_amount`='5.00', `minimum_campaign_amount`='100.00', `campaign_author`='', `campaign_minimum_pieces`='';
+INSERT INTO campaigns SET `id`='1', `name`='100 TL ve üzeri alışverişlerde sipariş toplamına %5 indirim', `discount_type`='percentage', `discount_amount`='5.00', `minimum_campaign_amount`='100.00', `campaign_author`='', `campaign_minimum_pieces`='';
 INSERT INTO campaigns SET `id`='2', `name`='Sabahattin Ali\'nin Roman kitaplarında 2 üründen 1 tanesi bedava', `discount_type`='free_item', `discount_amount`='0.00', `minimum_campaign_amount`='', `campaign_author`='3', `campaign_minimum_pieces`='2';
 
 DROP TABLE IF EXISTS categories;
 
 CREATE TABLE `categories` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `category_id` int NOT NULL,
   `category_title` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO categories SET `id`='1', `category_id`='1', `category_title`='Roman';
-INSERT INTO categories SET `id`='2', `category_id`='2', `category_title`='Kişisel Gelişim';
-INSERT INTO categories SET `id`='3', `category_id`='3', `category_title`='Bilim';
-INSERT INTO categories SET `id`='4', `category_id`='4', `category_title`='Din Tasavvuf';
-INSERT INTO categories SET `id`='5', `category_id`='4', `category_title`='Çocuk ve Gençlik';
-INSERT INTO categories SET `id`='6', `category_id`='5', `category_title`='Öykü';
-INSERT INTO categories SET `id`='7', `category_id`='6', `category_title`='Felsefe';
+INSERT INTO categories SET `id`='1', `category_title`='Roman';
+INSERT INTO categories SET `id`='2', `category_title`='Kişisel Gelişim';
+INSERT INTO categories SET `id`='3', `category_title`='Bilim';
+INSERT INTO categories SET `id`='4', `category_title`='Din Tasavvuf';
+INSERT INTO categories SET `id`='5', `category_title`='Çocuk ve Gençlik';
+INSERT INTO categories SET `id`='6', `category_title`='Öykü';
+INSERT INTO categories SET `id`='7', `category_title`='Felsefe';
 
 DROP TABLE IF EXISTS customers;
 
@@ -99,7 +94,6 @@ CREATE TABLE `customers` (
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO customers SET `id`='1', `customer_name`='Mertcan Ekren', `customer_email`='mertcanekren@gmail.com', `customer_address`='Bursa', `createtime`='1681293224';
-INSERT INTO customers SET `id`='2', `customer_name`='Mertcan Ekren-2', `customer_email`='mertcanekren@windowslive.com', `customer_address`='Bursa', `createtime`='1681293271';
 
 DROP TABLE IF EXISTS order_products;
 
@@ -111,13 +105,11 @@ CREATE TABLE `order_products` (
   `list_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO order_products SET `id`='1', `order_id`='1', `product_id`='3', `quantity`='4', `list_price`='9.10', `total_price`='27.30';
-INSERT INTO order_products SET `id`='2', `order_id`='2', `product_id`='3', `quantity`='4', `list_price`='9.10', `total_price`='27.30';
-INSERT INTO order_products SET `id`='3', `order_id`='3', `product_id`='3', `quantity`='4', `list_price`='9.10', `total_price`='27.30';
-INSERT INTO order_products SET `id`='4', `order_id`='4', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='5', `order_id`='5', `product_id`='3', `quantity`='2', `list_price`='9.10', `total_price`='9.10';
+INSERT INTO order_products SET `id`='1', `order_id`='1', `product_id`='1', `quantity`='5', `list_price`='48.75', `total_price`='243.75';
+INSERT INTO order_products SET `id`='2', `order_id`='2', `product_id`='3', `quantity`='2', `list_price`='9.10', `total_price`='9.10';
+INSERT INTO order_products SET `id`='3', `order_id`='3', `product_id`='1', `quantity`='2', `list_price`='48.75', `total_price`='97.50';
 
 DROP TABLE IF EXISTS orders;
 
@@ -131,11 +123,9 @@ CREATE TABLE `orders` (
   `shipping_cost` decimal(10,2) NOT NULL DEFAULT '0.00',
   `createtime` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO orders SET `id`='1', `customer_id`='2', `total_price`='27.30', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681384644';
-INSERT INTO orders SET `id`='2', `customer_id`='2', `total_price`='27.30', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681384652';
-INSERT INTO orders SET `id`='3', `customer_id`='2', `total_price`='27.30', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681385598';
-INSERT INTO orders SET `id`='4', `customer_id`='2', `total_price`='9.10', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681385653';
-INSERT INTO orders SET `id`='5', `customer_id`='2', `total_price`='9.10', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681385673';
+INSERT INTO orders SET `id`='1', `customer_id`='1', `total_price`='231.56', `discounted_price`='231.56', `without_discounted_price`='243.75', `campaign_id`='1', `shipping_cost`='0.00', `createtime`='1681390704';
+INSERT INTO orders SET `id`='2', `customer_id`='1', `total_price`='9.10', `discounted_price`='0.00', `without_discounted_price`='18.20', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681390770';
+INSERT INTO orders SET `id`='3', `customer_id`='1', `total_price`='97.50', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='0', `shipping_cost`='75.00', `createtime`='1681390807';
 
