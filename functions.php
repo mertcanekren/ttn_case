@@ -6,6 +6,12 @@
 * @link mertcanekren.github.io
 */
 
+/**
+* Mail adresi validasyonu gerçekleştirir.
+*
+* @param string $email Mail adresi
+* @return bool
+*/
 function CheckEmail($email){
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return true;
@@ -14,6 +20,12 @@ function CheckEmail($email){
     }
 }
 
+/**
+* id bilgisi gönderilen ürünün bilgilerini döndürür.
+*
+* @param int $book_id ürün id bilgisi
+* @return array
+*/
 function getBookDatabyID($book_id){
     global $pdo;
 
@@ -28,6 +40,9 @@ function getBookDatabyID($book_id){
     }
 }
 
+/**
+* sipariş aşamasında ürün arrayinin sıralanması için kullanılır
+*/
 function sort_list_price($a, $b) {
     if ($a['list_price'] == $b['list_price']) {
         return 0;
