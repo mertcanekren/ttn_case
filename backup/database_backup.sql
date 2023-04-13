@@ -65,7 +65,7 @@ CREATE TABLE `campaigns` (
   `campaign_author` varchar(50) DEFAULT NULL,
   `campaign_minimum_pieces` int DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
 INSERT INTO campaigns SET `id`='1', `name`='100 TL Üstü Yüzde 5 İndirim', `discount_type`='percentage', `discount_amount`='5.00', `minimum_campaign_amount`='100.00', `campaign_author`='', `campaign_minimum_pieces`='';
 INSERT INTO campaigns SET `id`='2', `name`='Sabahattin Ali\'nin Roman kitaplarında 2 üründen 1 tanesi bedava', `discount_type`='free_item', `discount_amount`='0.00', `minimum_campaign_amount`='', `campaign_author`='3', `campaign_minimum_pieces`='2';
@@ -111,62 +111,13 @@ CREATE TABLE `order_products` (
   `list_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   `total_price` decimal(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO order_products SET `id`='1', `order_id`='1', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='2', `order_id`='1', `product_id`='12', `quantity`='1', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='3', `order_id`='1', `product_id`='11', `quantity`='1', `list_price`='10.40', `total_price`='10.40';
-INSERT INTO order_products SET `id`='4', `order_id`='2', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='5', `order_id`='2', `product_id`='12', `quantity`='1', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='6', `order_id`='2', `product_id`='11', `quantity`='1', `list_price`='10.40', `total_price`='10.40';
-INSERT INTO order_products SET `id`='7', `order_id`='3', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='8', `order_id`='3', `product_id`='12', `quantity`='1', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='9', `order_id`='3', `product_id`='11', `quantity`='1', `list_price`='10.40', `total_price`='10.40';
-INSERT INTO order_products SET `id`='10', `order_id`='4', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='11', `order_id`='4', `product_id`='12', `quantity`='1', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='12', `order_id`='4', `product_id`='11', `quantity`='1', `list_price`='10.40', `total_price`='10.40';
-INSERT INTO order_products SET `id`='13', `order_id`='5', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='14', `order_id`='5', `product_id`='12', `quantity`='1', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='15', `order_id`='5', `product_id`='11', `quantity`='1', `list_price`='10.40', `total_price`='10.40';
-INSERT INTO order_products SET `id`='16', `order_id`='6', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='17', `order_id`='6', `product_id`='12', `quantity`='8', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='18', `order_id`='6', `product_id`='11', `quantity`='1', `list_price`='10.40', `total_price`='10.40';
-INSERT INTO order_products SET `id`='19', `order_id`='7', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='20', `order_id`='7', `product_id`='12', `quantity`='8', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='21', `order_id`='7', `product_id`='11', `quantity`='2', `list_price`='10.40', `total_price`='20.80';
-INSERT INTO order_products SET `id`='22', `order_id`='8', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='23', `order_id`='8', `product_id`='12', `quantity`='8', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='24', `order_id`='8', `product_id`='11', `quantity`='2', `list_price`='10.40', `total_price`='20.80';
-INSERT INTO order_products SET `id`='25', `order_id`='9', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='26', `order_id`='9', `product_id`='12', `quantity`='8', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='27', `order_id`='9', `product_id`='11', `quantity`='2', `list_price`='10.40', `total_price`='20.80';
-INSERT INTO order_products SET `id`='28', `order_id`='10', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='29', `order_id`='10', `product_id`='12', `quantity`='1', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='30', `order_id`='10', `product_id`='11', `quantity`='1', `list_price`='10.40', `total_price`='10.40';
-INSERT INTO order_products SET `id`='31', `order_id`='11', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='32', `order_id`='11', `product_id`='12', `quantity`='1', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='33', `order_id`='11', `product_id`='11', `quantity`='1', `list_price`='10.40', `total_price`='10.40';
-INSERT INTO order_products SET `id`='34', `order_id`='12', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='35', `order_id`='12', `product_id`='12', `quantity`='8', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='36', `order_id`='12', `product_id`='11', `quantity`='2', `list_price`='10.40', `total_price`='20.80';
-INSERT INTO order_products SET `id`='37', `order_id`='13', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='38', `order_id`='13', `product_id`='12', `quantity`='8', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='39', `order_id`='13', `product_id`='11', `quantity`='2', `list_price`='10.40', `total_price`='20.80';
-INSERT INTO order_products SET `id`='40', `order_id`='14', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='41', `order_id`='14', `product_id`='12', `quantity`='8', `list_price`='9.75', `total_price`='0.00';
-INSERT INTO order_products SET `id`='42', `order_id`='14', `product_id`='11', `quantity`='2', `list_price`='10.40', `total_price`='20.80';
-INSERT INTO order_products SET `id`='43', `order_id`='15', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='44', `order_id`='15', `product_id`='11', `quantity`='1', `list_price`='10.40', `total_price`='0.00';
-INSERT INTO order_products SET `id`='45', `order_id`='16', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='46', `order_id`='16', `product_id`='13', `quantity`='1', `list_price`='14.40', `total_price`='14.40';
-INSERT INTO order_products SET `id`='47', `order_id`='17', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='48', `order_id`='17', `product_id`='13', `quantity`='1', `list_price`='14.40', `total_price`='14.40';
-INSERT INTO order_products SET `id`='49', `order_id`='18', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='50', `order_id`='18', `product_id`='13', `quantity`='1', `list_price`='14.40', `total_price`='14.40';
-INSERT INTO order_products SET `id`='51', `order_id`='19', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='52', `order_id`='19', `product_id`='13', `quantity`='1', `list_price`='14.40', `total_price`='14.40';
-INSERT INTO order_products SET `id`='53', `order_id`='20', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
-INSERT INTO order_products SET `id`='54', `order_id`='20', `product_id`='13', `quantity`='1', `list_price`='14.40', `total_price`='14.40';
+INSERT INTO order_products SET `id`='1', `order_id`='1', `product_id`='3', `quantity`='4', `list_price`='9.10', `total_price`='27.30';
+INSERT INTO order_products SET `id`='2', `order_id`='2', `product_id`='3', `quantity`='4', `list_price`='9.10', `total_price`='27.30';
+INSERT INTO order_products SET `id`='3', `order_id`='3', `product_id`='3', `quantity`='4', `list_price`='9.10', `total_price`='27.30';
+INSERT INTO order_products SET `id`='4', `order_id`='4', `product_id`='3', `quantity`='1', `list_price`='9.10', `total_price`='9.10';
+INSERT INTO order_products SET `id`='5', `order_id`='5', `product_id`='3', `quantity`='2', `list_price`='9.10', `total_price`='9.10';
 
 DROP TABLE IF EXISTS orders;
 
@@ -180,26 +131,11 @@ CREATE TABLE `orders` (
   `shipping_cost` decimal(10,2) NOT NULL DEFAULT '0.00',
   `createtime` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO orders SET `id`='1', `customer_id`='2', `total_price`='29.25', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='0', `shipping_cost`='75.00', `createtime`='1681310304';
-INSERT INTO orders SET `id`='2', `customer_id`='2', `total_price`='29.25', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='0', `shipping_cost`='75.00', `createtime`='1681310454';
-INSERT INTO orders SET `id`='3', `customer_id`='2', `total_price`='29.25', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='0', `shipping_cost`='75.00', `createtime`='1681310676';
-INSERT INTO orders SET `id`='4', `customer_id`='2', `total_price`='29.25', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='0', `shipping_cost`='75.00', `createtime`='1681310694';
-INSERT INTO orders SET `id`='5', `customer_id`='2', `total_price`='29.25', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681310782';
-INSERT INTO orders SET `id`='6', `customer_id`='2', `total_price`='97.50', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681310804';
-INSERT INTO orders SET `id`='7', `customer_id`='2', `total_price`='102.51', `discounted_price`='102.51', `without_discounted_price`='107.90', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681310818';
-INSERT INTO orders SET `id`='8', `customer_id`='2', `total_price`='102.51', `discounted_price`='102.51', `without_discounted_price`='107.90', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681310837';
-INSERT INTO orders SET `id`='9', `customer_id`='2', `total_price`='102.51', `discounted_price`='102.51', `without_discounted_price`='107.90', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681310855';
-INSERT INTO orders SET `id`='10', `customer_id`='2', `total_price`='29.25', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681310859';
-INSERT INTO orders SET `id`='11', `customer_id`='2', `total_price`='29.25', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681310862';
-INSERT INTO orders SET `id`='12', `customer_id`='2', `total_price`='102.51', `discounted_price`='102.51', `without_discounted_price`='107.90', `campaign_id`='1', `shipping_cost`='75.00', `createtime`='1681310872';
-INSERT INTO orders SET `id`='13', `customer_id`='2', `total_price`='107.90', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681310977';
-INSERT INTO orders SET `id`='14', `customer_id`='2', `total_price`='107.90', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681311030';
-INSERT INTO orders SET `id`='15', `customer_id`='2', `total_price`='19.50', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681311061';
-INSERT INTO orders SET `id`='16', `customer_id`='2', `total_price`='23.50', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681311069';
-INSERT INTO orders SET `id`='17', `customer_id`='2', `total_price`='23.50', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681311079';
-INSERT INTO orders SET `id`='18', `customer_id`='2', `total_price`='23.50', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681311129';
-INSERT INTO orders SET `id`='19', `customer_id`='2', `total_price`='23.50', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681311182';
-INSERT INTO orders SET `id`='20', `customer_id`='2', `total_price`='23.50', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681311210';
+INSERT INTO orders SET `id`='1', `customer_id`='2', `total_price`='27.30', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681384644';
+INSERT INTO orders SET `id`='2', `customer_id`='2', `total_price`='27.30', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681384652';
+INSERT INTO orders SET `id`='3', `customer_id`='2', `total_price`='27.30', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681385598';
+INSERT INTO orders SET `id`='4', `customer_id`='2', `total_price`='9.10', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681385653';
+INSERT INTO orders SET `id`='5', `customer_id`='2', `total_price`='9.10', `discounted_price`='0.00', `without_discounted_price`='0.00', `campaign_id`='2', `shipping_cost`='75.00', `createtime`='1681385673';
 
