@@ -26,13 +26,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // sipariş toplamı için değişken tanımlanıyor
             $total_price = 0;
 
+            // kampanyada indirim tutarı hesaplanması için
+            $discount_price = 0;
+
             // aynı yazarın sipariş gelen kitap adedi için değişken tanımlanıyor
             $author_quantity = 0;
 
+            //siparişin hangi kampanyada dahil olduğunu belirlemek için
             $order_campaign_id = 0;
+            
+            //siparişin indirimli fiyatında kullanmak için tanımlanıyor
             $order_discounted_price = 0;
+            
+            //siparişin indirimsiz fiyatını tanımlamak için kullanılıyor
             $order_without_discounted_price = 0;
+            
+            //siparişin maksimum bir kampanyadan faydalanmasını kontrol etmek için tanımlanıyor
             $check_order_campaign = false;
+
             $products = array();
 
             // post ile gelen ürünler
@@ -44,7 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     $product_c++;
                     $quantity = $_POST["quantity"][$product_c];
-
+                    
+                    // ürün stok kontrolleri için veritabanı üzerinden bilgileri okunuyor
                     $product_query = "SELECT stock_quantity, list_price, author_id FROM books WHERE id = :product_id";
                     $product_query = $pdo->prepare($product_query);
                     $product_query->execute(['product_id' => $product_id]);
@@ -81,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // ürünler liste fiyatına göre azdan çok fiyatına göre sıralanıyor
                 usort($products, 'sort_list_price');
 
+                // Aynı yazar kitaplarında bedava kampanyası kontrolleri
                 foreach ($products as &$order_product) {
                     
                     // sipariş için gelen kitap datası yazar bilgisi için veritabanından okunuyor
@@ -96,28 +109,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $campaigns_query_author_row = $campaigns_query_author->fetch(PDO::FETCH_ASSOC);
                         $author_quantity += $order_product["quantity"];
                         $order_campaign_id = $campaigns_query_author_row["id"];
-
                     }
 
-                    // kampanya koşullarında belirtilen minimum ürün adedi 
-                    if($campaigns_query_author_row["campaign_minimum_pieces"]){
-                        // eğer aynı yazarın kitaplarından kampanyada belirtiken minimum sayıdan fazla ise
-                        if($author_quantity >= $campaigns_query_author_row["campaign_minimum_pieces"]){
-                            $order_product["total_price"] = 0;
-                        $check_order_campaign = true;
+                    /** eğer sipariş ürününde yazar id bilgisi ile kampanya üzerinde belirtilen
+                     *  yazar bilgisi eşitse ve sipariş ürününüde ürün adedi kampanya üzerinde
+                     *  belirtilen minimum ürün adedinden eşit yada yüksekse
+                     */
 
-                            break;
+                     // eğer aynı ürün birden falza kez sipariş ediliyorsa
+                    if($order_product["author_id"] == $campaigns_query_author_row["campaign_author"] && $order_product["quantity"] >= $campaigns_query_author_row["campaign_minimum_pieces"]){
+                        /**
+                         * Sipariş ürünlerinde aynı yazarın ürünlerinden adet olarak kampanya üzerinde
+                         * olan minimum ürün adedinden fazla ise bir adet ürünün fiyatı ürün fiyatlarından
+                         * düşülüyor
+                         */
+                        $order_product["total_price"] = ($order_product["total_price"]-$order_product["list_price"]);
+                        $check_order_campaign = true;
+                        $total_price = 0;
+                        break;
+                    }else{
+                        // kampanya koşullarında belirtilen minimum ürün adedi 
+                        if($campaigns_query_author_row["campaign_minimum_pieces"]){
+                            // eğer aynı yazarın kitaplarından kampanyada belirtiken minimum sayıdan fazla ise
+                            if($author_quantity >= $campaigns_query_author_row["campaign_minimum_pieces"]){
+                                // sipariş ürzerinde olan aynı yazarın bir ürününün fiyatı sıfırlanıyor
+                                $order_product["total_price"] = 0;
+                                $check_order_campaign = true;
+                                $total_price = 0;
+                                break;
+                            }
                         }
                     }
-                    
                 }
-
-                print_r($products);
-
+                
+                // yazar kampanyası kontrollerinden sonra toplam sipariş fiyatı tekrar toplanıyor
+                if($check_order_campaign == true){
+                    foreach ($products as $product_total) {
+                        $total_price += $product_total["total_price"];
+                    }
+                }
 
                 // Kargo bedeli hesaplama
                 $shipping_cost = $total_price >= 200 ? 0 : 75;
-                var_dump($check_order_campaign);
+                
+                //100 tl üzeri siparişlerde %5 indirim kontrolleri
                 if($check_order_campaign == false){
                     // Yüzdelik olarak indirimli kampanyaları hesaplama
                     $campaigns_query_per = "SELECT * FROM campaigns WHERE discount_type=:discount_type order by minimum_campaign_amount desc";
@@ -125,15 +160,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $campaigns_query_per->execute(['discount_type' => "percentage"]);
                     if ($campaigns_query_per->rowCount() > 0) {
                         
-                        
                         // Yüzdelik olarak eklenmiş olan kampanyalar minimum sepet tutarına göre yüksek fiyattan alçak fiyata doğru kontrol ediliyor
                         while ($campaigns_query_per_row = $campaigns_query_per->fetch(PDO::FETCH_ASSOC)) {
                             
                             // Sipariş tutarına eşit yada düşük en yakın kampanya seçiliyor 
                             if ($total_price >= $campaigns_query_per_row['minimum_campaign_amount']) {
                                 
-                                
-
                                 // indirim tutarı hesaplanıyor
                                 $discount_price = $total_price * ($campaigns_query_per_row['discount_amount'] / $campaigns_query_per_row['minimum_campaign_amount']);
 
@@ -141,18 +173,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 
                                 // sepet tutarına en yakın kampanya belirlenince kontrol aşaması durduruluyor
                                 $order_campaign_id = $campaigns_query_per_row["id"];
+
+                                // siparişin indirimli tutarı
                                 $order_discounted_price = $last_discount_price;
+                                
+                                // siparişin indirimsiz tutarı
                                 $order_without_discounted_price = $total_price;
+                                
+                                // toplan sipariş tutarı
                                 $total_price = $last_discount_price;
                                 break;
                                 
                             }
-
                         }
                     }
                 }
-                
-                
 
                 // müşteri bilgileri kontrol ediliyor
                 $customer_check_query = "SELECT id,customer_email FROM customers WHERE customer_email = :customer_email";
@@ -203,8 +238,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         "customer_name" => $customer_name,
                         "customer_email" => $customer_email,
                         "customer_address" => $customer_address,
-                        "total_price" => $total_price,
-                        "shipping_cost" => $shipping_cost
+                        "total_price" => round($total_price,2),
+                        "shipping_cost" => $shipping_cost,
+                        'discounted_price' => $order_discounted_price,
+                        'without_discounted_price' => $order_without_discounted_price,
+                        'campaign_id' => $order_campaign_id,
+                        'customer_id' => $customer_id,
                     ]));
 
                     foreach ($products as $product) {
@@ -225,13 +264,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ]);
                         if ($product_insert->rowCount() > 0) {
                             // Ürün stok bilgisini alınan stok adedine göre veritabanında güncellenir
-                            /*$update_stock_query = "UPDATE books SET stock_quantity = stock_quantity - :quantity WHERE id = :product_id";
+                            $update_stock_query = "UPDATE books SET stock_quantity = stock_quantity - :quantity WHERE id = :product_id";
                             $update_stock_query = $pdo->prepare($update_stock_query);
                             if(!$update_stock_query->execute(['quantity' => $quantity, 'product_id' => $product_id])){
                                 http_response_code(500);
                                 echo json_encode(array("status" => false, "message" => "Stok bilgileri güncellenemedi."));
                                 exit();
-                            }*/
+                            }
                         }else{
                             http_response_code(500);
                             echo json_encode(array("status" => false, "message" => "Sipariş kayıdı oluşturulurken hata oluştu."));
