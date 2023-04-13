@@ -43,6 +43,8 @@
 
 *`product_id` ve `quantity` değerleri array tipinde POST edilmesi gerekmektedir.*
 
+*Örnek: id numarası 1 ve 2 olan üründen 2 adet sipariş verceksek ürünleri içeren POST datası products_id[] = 1 quantity[] = 2, products_id[] = 2 quantity[] = 2 olmalıdır*
+
 ### Sipariş Detayları Görüntüleme
 
 `show_order.php` dosyasına POST methodu ile gönderilmesi gereken değer.
