@@ -109,42 +109,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $campaigns_query_author_row = $campaigns_query_author->fetch(PDO::FETCH_ASSOC);
                         $author_quantity += $order_product["quantity"];
                         $order_campaign_id = $campaigns_query_author_row["id"];
-                    }
 
-                    /** eğer sipariş ürününde yazar id bilgisi ile kampanya üzerinde belirtilen
-                     *  yazar bilgisi eşitse ve sipariş ürününüde ürün adedi kampanya üzerinde
-                     *  belirtilen minimum ürün adedinden eşit yada yüksekse
-                     */
-
-                     // eğer aynı ürün birden falza kez sipariş ediliyorsa
-                    if($order_product["author_id"] == $campaigns_query_author_row["campaign_author"] && $order_product["quantity"] >= $campaigns_query_author_row["campaign_minimum_pieces"]){
-                        /**
-                         * Sipariş ürünlerinde aynı yazarın ürünlerinden adet olarak kampanya üzerinde
-                         * olan minimum ürün adedinden fazla ise bir adet ürünün fiyatı ürün fiyatlarından
-                         * düşülüyor
+                        /** eğer sipariş ürününde yazar id bilgisi ile kampanya üzerinde belirtilen
+                         *  yazar bilgisi eşitse ve sipariş ürününüde ürün adedi kampanya üzerinde
+                         *  belirtilen minimum ürün adedinden eşit yada yüksekse
                          */
-                        $order_product["total_price"] = ($order_product["total_price"]-$order_product["list_price"]);
-                        $check_order_campaign = true;
 
-                        // siparişin indirimsiz tutarı
-                        $order_without_discounted_price = $total_price;
+                        // eğer aynı ürün birden falza kez sipariş ediliyorsa
+                        if($order_product["author_id"] == $campaigns_query_author_row["campaign_author"] && $order_product["quantity"] >= $campaigns_query_author_row["campaign_minimum_pieces"]){
+                            /**
+                             * Sipariş ürünlerinde aynı yazarın ürünlerinden adet olarak kampanya üzerinde
+                             * olan minimum ürün adedinden fazla ise bir adet ürünün fiyatı ürün fiyatlarından
+                             * düşülüyor
+                             */
+                            $order_product["total_price"] = ($order_product["total_price"]-$order_product["list_price"]);
+                            $check_order_campaign = true;
 
-                        $total_price = 0;
-                        break;
-                    }else{
-                        // kampanya koşullarında belirtilen minimum ürün adedi 
-                        if($campaigns_query_author_row["campaign_minimum_pieces"]){
-                            // eğer aynı yazarın kitaplarından kampanyada belirtiken minimum sayıdan fazla ise
-                            if($author_quantity >= $campaigns_query_author_row["campaign_minimum_pieces"]){
-                                // sipariş ürzerinde olan aynı yazarın bir ürününün fiyatı sıfırlanıyor
-                                $order_product["total_price"] = 0;
-                                $check_order_campaign = true;
+                            // siparişin indirimsiz tutarı
+                            $order_without_discounted_price = $total_price;
 
-                                // siparişin indirimsiz tutarı
-                                $order_without_discounted_price = $total_price;
-                                
-                                $total_price = 0;
-                                break;
+                            $total_price = 0;
+                            break;
+                        }else{
+                            // kampanya koşullarında belirtilen minimum ürün adedi 
+                            if($campaigns_query_author_row["campaign_minimum_pieces"]){
+                                // eğer aynı yazarın kitaplarından kampanyada belirtiken minimum sayıdan fazla ise
+                                if($author_quantity >= $campaigns_query_author_row["campaign_minimum_pieces"]){
+                                    // sipariş ürzerinde olan aynı yazarın bir ürününün fiyatı sıfırlanıyor
+                                    $order_product["total_price"] = 0;
+                                    $check_order_campaign = true;
+
+                                    // siparişin indirimsiz tutarı
+                                    $order_without_discounted_price = $total_price;
+                                    
+                                    $total_price = 0;
+                                    break;
+                                }
                             }
                         }
                     }
